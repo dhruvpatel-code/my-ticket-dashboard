@@ -21,7 +21,6 @@ interface Event {
   // other fields...
 }
 
-
 export default function Dashboard() {
   const [events, setEvents] = useState<Event[]>([]);
   const [sortKey, setSortKey] = useState<'name' | 'date'>('name');
@@ -33,8 +32,8 @@ export default function Dashboard() {
     setLoading(true);
     Promise.all([getTicketmasterEvents(), getSeatGeekEvents()])
       .then(([ticketmasterEvents, seatGeekEvents]) => {
-        // Combine or process the events as needed
-        setEvents([...ticketmasterEvents, ...seatGeekEvents]);
+        const combinedEvents = [...ticketmasterEvents, ...seatGeekEvents];
+        setEvents(combinedEvents);
         setLoading(false);
       })
       .catch(err => {
@@ -48,14 +47,14 @@ export default function Dashboard() {
       return a.name.localeCompare(b.name);
     }
     if (sortKey === 'date') {
-      return (new Date(a.date || '')).getTime() - (new Date(b.date || '')).getTime();
+      const dateA = new Date(a.date || '');
+      const dateB = new Date(b.date || '');
+      return dateA.getTime() - dateB.getTime();
     }
     return 0;
   };
 
-  const filteredEvents = events
-    .filter(event => event.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort(handleSort);
+  const filteredEvents = events.filter(event => event.name.toLowerCase().includes(searchQuery.toLowerCase())).sort(handleSort);
 
   return (
     <div className={styles.dashboard}>
@@ -107,7 +106,7 @@ export default function Dashboard() {
                 <td>{event.date}</td>
                 <td>{event.venue}</td>
                 <td>
-                  {event.priceRanges && event.priceRanges.map((range, index) => (
+                  {event.priceRanges?.map((range, index) => (
                     <div key={index}>${range.min} - ${range.max} {range.currency}</div>
                   ))}
                 </td>

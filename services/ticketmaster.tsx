@@ -18,7 +18,6 @@ interface Event {
   // other fields...
 }
 
-
 interface QueryParams {
   size?: number;
   sort?: string;
@@ -44,9 +43,6 @@ const buildQueryString = (params: QueryParams): string => {
 };
 
 export async function getTicketmasterEvents(params: QueryParams = {}): Promise<Event[]> {
-  // Function to build query string from parameters
-  
-
   const queryParameters: QueryParams = {
     size: 200, // Number of events to return
     sort: 'date,asc', // Sorting by date in ascending order
@@ -79,6 +75,13 @@ export async function getTicketmasterEvents(params: QueryParams = {}): Promise<E
     console.error('There was a problem with the fetch operation:', error);
     throw error; // Rethrow the error to handle it in the component if needed
   }
+}
+
+export async function getAllEvents(params: QueryParams = {}): Promise<Event[]> {
+  const ticketmasterEvents = await getTicketmasterEvents(params);
+  const seatGeekEvents = await getSeatGeekEvents(params);
+
+  return [...ticketmasterEvents, ...seatGeekEvents];
 }
 
 export async function getSeatGeekEvents(params: QueryParams = {}): Promise<Event[]> {
