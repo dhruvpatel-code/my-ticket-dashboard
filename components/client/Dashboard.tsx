@@ -67,7 +67,7 @@ export default function Dashboard() {
           onChange={e => setSearchQuery(e.target.value)}
           className={styles.searchInput}
         />
-        <label htmlFor="sort">Sort by: </label>
+        <label htmlFor="sort">Sort by Name or Date: </label>
         <select
           id="sort"
           onChange={e => setSortKey(e.target.value as 'name' | 'date')}
